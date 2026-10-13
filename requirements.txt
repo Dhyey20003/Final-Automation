@@ -1,0 +1,23 @@
+# Relay Employee Hub runtime dependencies (all pinned, including transitive ones).
+# Licences: see THIRD_PARTY_LICENSES.md
+fastapi==0.141.1
+starlette==1.0.0
+pydantic==2.13.3
+pydantic-core==2.46.3
+annotated-types==0.7.0
+annotated-doc==0.0.5
+typing-extensions==4.15.0
+typing-inspection==0.4.2
+anyio==4.13.0
+idna==3.13
+uvicorn==0.46.0
+h11==0.16.0
+click==8.3.3
+colorama==0.4.6
+python-multipart==0.0.26
+openpyxl==3.1.5
+et-xmlfile==2.0.0
+pillow==12.2.0
+pypdfium2==5.13.0
+tzdata==2026.4
+pywin32==312; sys_platform == "win32"
