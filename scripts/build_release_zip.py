@@ -32,7 +32,8 @@ def wanted(p: Path) -> bool:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="dist")
-    ap.add_argument("--no-wheelhouse", action="store_true")
+    ap.add_argument("--no-wheelhouse", action="store_true", help="smaller ZIP; setup installs the components from the internet instead")
+    ap.add_argument("--wheelhouse-zip", action="store_true", help="also write RelayEmployeeHub_v<version>_wheelhouse.zip (offline components)")
     args = ap.parse_args()
     out_dir = ROOT / args.out
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -59,6 +60,13 @@ def main() -> int:
         z.writestr(f"{top}/Tools/ffmpeg/PUT_ffmpeg.exe_AND_ffprobe.exe_HERE.txt",
                    "Copy ffmpeg.exe and ffprobe.exe into this folder (or install FFmpeg on PATH). The Video Studio needs them.\n")
     print(f"{dest}  ({n} files, {dest.stat().st_size / 1048576:.1f} MB)")
+    if args.wheelhouse_zip:
+        wz = out_dir / f"RelayEmployeeHub_v{APP_VERSION}_wheelhouse.zip"
+        with zipfile.ZipFile(wz, "w", zipfile.ZIP_STORED) as z:
+            for p in sorted((ROOT / "wheelhouse").rglob("*")):
+                if p.is_file():
+                    z.write(p, f"{top}/{p.relative_to(ROOT).as_posix()}")
+        print(f"{wz}  ({wz.stat().st_size / 1048576:.1f} MB)  extract into the same folder for offline setup")
     return 0
 
 

@@ -3,7 +3,9 @@ RELAY EMPLOYEE HUB 2.0  (employee database + Posts + Videos in one application)
 
 FIRST-TIME SETUP (once per computer)
 1. Install Python 3.12 or 3.13 (64-bit) from python.org. Tick "Add python.exe to PATH".
-   This is the only download. Everything else is in the wheelhouse folder.
+   The full ZIP includes a wheelhouse folder with every component for offline
+   installation. The smaller ZIP without it downloads the components once
+   (about 25 MB) during setup.
 2. Extract this ZIP somewhere local, for example C:\RelayEmployeeHub
    (not inside OneDrive). Keep the folder structure as it is.
 3. Double-click  Setup Relay Employee Hub.bat

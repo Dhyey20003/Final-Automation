@@ -28,22 +28,27 @@ if not defined PYEXE (
   exit /b 1
 )
 set "WHEELS=wheelhouse\py%PYVER:.=%"
-if not exist "%WHEELS%" (
-  echo The folder %WHEELS% is missing. Copy the complete application folder and try again.
-  pause
-  exit /b 1
-)
 
 echo Using Python %PYVER%
 if not exist ".venv\Scripts\python.exe" (
   echo Creating the private Python environment...
   %PYEXE% -m venv .venv || (echo Could not create the environment. & pause & exit /b 1)
 )
-echo Installing components from the local wheelhouse (no internet needed)...
-".venv\Scripts\python.exe" -m pip install --no-index --find-links "%WHEELS%" -r requirements.txt || (
-  echo Installation failed. See the messages above.
-  pause
-  exit /b 1
+if exist "%WHEELS%" (
+  echo Installing components from the local wheelhouse (no internet needed)...
+  ".venv\Scripts\python.exe" -m pip install --no-index --find-links "%WHEELS%" -r requirements.txt || (
+    echo Installation failed. See the messages above.
+    pause
+    exit /b 1
+  )
+) else (
+  echo The offline wheelhouse folder %WHEELS% is not included in this copy.
+  echo Installing the components from the internet instead (one-time download of about 25 MB)...
+  ".venv\Scripts\python.exe" -m pip install -r requirements.txt || (
+    echo Installation failed. Check the internet connection, or copy the wheelhouse folder from the full ZIP into this folder and run setup again.
+    pause
+    exit /b 1
+  )
 )
 ".venv\Scripts\python.exe" -c "import fastapi, uvicorn, openpyxl, PIL, pypdfium2, tzdata; print('Components OK')" || (pause & exit /b 1)
 
