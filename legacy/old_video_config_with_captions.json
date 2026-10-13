@@ -1,0 +1,104 @@
+{
+  "_README": "EDIT ONLY THE VALUES BELOW. Read _folder_rules to know what goes in each folder.",
+  "_folder_rules": {
+    "opening_folder": "Your 3 candid b-rolls. .mp4. Named open1.mp4, open2.mp4, open3.mp4. Darkened 40% with the name pill, hard-cut together, no transition between them. Leave empty to skip the opening.",
+    "cards_folder": "Your ready-made question cards. .mp4. Named card1.mp4 ... card8.mp4, paired with q1...q8. Add card9.mp4 (your plain white ending slide) and it is automatically appended at the very end, fading in with the same transition.",
+    "answers_folder": "Raw answer clips. .mp4, audio kept. Name them q1_<Name>.mp4 ... q8_<Name>.mp4, for example q1_Vector S.mp4. The q# sets the order; the text after the underscore becomes the name shown in the opening pill. All 8 use the same name (taken from q1).",
+    "captions_folder": "Your caption text files, named q1.txt ... q8.txt. Plain text: one caption line per line. Each answer's time is split evenly across however many lines you wrote. No transcription is done.",
+    "output_folder": "Finished video is written here.",
+    "completed_folder": "Auto-managed. After a build, if you answer y to the perfect? prompt, the answer clips are moved here into a subfolder named after the candidate, and the caption txt files are blanked so you can drop in the next person. Answer n and nothing is touched."
+  },
+  "_note_candidate_name": "Leave candidate_name empty to auto-read the name from the answer filenames (q1_Vector S.mp4 -> 'Vector S.'). Or type a name here to force it.",
+  "candidate_name": "",
+  "paths": {
+    "_note": "Absolute paths to your interview_video folder. Relative paths also work (resolved next to this script).",
+    "opening_folder": "C:\\Users\\DhyeyPatel\\OneDrive - Relay Human Cloud\\Desktop\\Relay_Automation_Hub\\files\\Raw_Files\\Video\\opening",
+    "cards_folder": "C:\\Users\\DhyeyPatel\\OneDrive - Relay Human Cloud\\Desktop\\Relay_Automation_Hub\\files\\Assets\\Video\\cards",
+    "answers_folder": "C:\\Users\\DhyeyPatel\\OneDrive - Relay Human Cloud\\Desktop\\Relay_Automation_Hub\\files\\Raw_Files\\Video\\answers",
+    "captions_folder": "C:\\Users\\DhyeyPatel\\OneDrive - Relay Human Cloud\\Desktop\\Relay_Automation_Hub\\files\\Raw_Files\\Video\\captions",
+    "output_folder": "C:\\Users\\DhyeyPatel\\OneDrive - Relay Human Cloud\\Desktop\\Relay_Automation_Hub\\files\\Output\\Videos",
+    "font_regular": "C:\\Users\\DhyeyPatel\\OneDrive - Relay Human Cloud\\Desktop\\Relay_Automation_Hub\\files\\Assets\\Video\\fonts\\Poppins-Regular.ttf",
+    "font_pill": "C:\\Users\\DhyeyPatel\\OneDrive - Relay Human Cloud\\Desktop\\Relay_Automation_Hub\\files\\Assets\\Video\\fonts\\PlusJakartaSans.ttf",
+    "completed_folder": "C:\\Users\\DhyeyPatel\\OneDrive - Relay Human Cloud\\Desktop\\Relay_Automation_Hub\\files\\Data\\Completed_Videos"
+  },
+  "output_filename": "{name}_final.mp4",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30
+  },
+  "transitions": {
+    "_note": "Smooth crossfade dissolve between every piece after the opening. 0.6s reads slow and soft.",
+    "crossfade_seconds": 0.6
+  },
+  "lower_third": {
+    "_note": "Rounded cream name pill (generated as PNG), Plus Jakarta Sans Bold, name centered. Slides in once and stays. darken_opacity is the light color-keeping overlay on the b-rolls.",
+    "darken_opacity": 0.18,
+    "font_size": 64,
+    "slide_in_seconds": 0.5,
+    "pill_color": "#FFFCF2",
+    "pill_opacity": 0.88,
+    "text_color": "#161616",
+    "pill_height": 150,
+    "pill_min_width": 520,
+    "pill_side_padding": 120,
+    "pill_corner_radius": 40,
+    "pill_rest_x": -30,
+    "pill_bottom_offset": 300
+  },
+  "captions": {
+    "_note": "White Poppins text (not bold) on a fixed translucent black bar, vertically centered. Lines too wide are auto-split to stay inside the bar. Timing is proportional to text length to follow speech.",
+    "font_size": 26,
+    "text_color": "#FFFFFF",
+    "box_color": "#000000",
+    "box_opacity": 0.55,
+    "bar_width_px": 1200,
+    "bar_height_px": 64,
+    "bar_text_padding": 40,
+    "bottom_margin_px": 95,
+    "bar_corner_radius": 14
+  },
+  "audio": {
+    "_note": "Fixes right-channel-only speech to both channels, then normalizes.",
+    "fix_right_to_both": true,
+    "target_lufs": -16,
+    "true_peak_max_dbtp": -1.5
+  },
+  "trim": {
+    "_note": "How trimmed clips are written, and how the start of speech is found. precise = frame accurate re-encode, fast = instant stream copy that snaps to keyframes. Only the start and end of a clip are ever cut, pauses in the middle are left alone.",
+    "mode": "precise",
+    "crf": 14,
+    "preset": "veryfast",
+    "threshold_db": "auto",
+    "min_db_above_floor": 8,
+    "sustain_ms": 120,
+    "min_speech_seconds": 0.5,
+    "max_gap_seconds": 0.6,
+    "speech_window_seconds": 1.5,
+    "silence_min_seconds": 0.35
+  },
+  "transcribe": {
+    "_note": "Auto captions for the 8 answer clips only. engine auto = faster-whisper if installed, else OpenAI if a key is set. pre_roll_seconds is the lead-in kept before the first real spike of speech.",
+    "engine": "auto",
+    "model": "medium",
+    "language": "en",
+    "device": "auto",
+    "compute_type": "int8",
+    "openai_model": "whisper-1",
+    "openai_api_key": "",
+    "pre_roll_seconds": 0.8,
+    "post_roll_seconds": 0.8,
+    "max_line_chars": 62,
+    "vocabulary": "Relay Human Cloud, Ahmedabad, Vadodara"
+  },
+  "denoise": {
+    "_note": "Audio clean up on the finished video. The video is copied, never re-encoded. keep_original true gives you both files, false leaves only the cleaned one. engine auto = DeepFilterNet if installed, else ClearVoice, else ffmpeg's own filter. mix 0.9 keeps 10 percent of the original so the voice stays natural.",
+    "enabled": true,
+    "keep_original": true,
+    "engine": "auto",
+    "clean_suffix": "_clean",
+    "mix": 0.9,
+    "renormalize": true,
+    "ffmpeg_nr_db": 12
+  }
+}

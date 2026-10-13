@@ -1,6 +1,8 @@
-# Relay Employee Hub
+# Relay Employee Hub 2.0
 
-A local Windows application for Relay Human Cloud that keeps employee records and photos, imports HR spreadsheets, and prepares and sends the recurring IT and HR headshot packages through classic Outlook.
+A local Windows application for Relay Human Cloud that keeps employee records and photos, imports HR spreadsheets and screenshots, generates and publishes deployment posts, requests logos through classic Outlook, runs the interview Video Studio, and prepares and sends the recurring IT and HR headshot packages.
+
+Version 2.0 folds the former Automation Hub, Post Studio and Video Studio launchers into this one application. See `START_HERE.txt` for setup and `docs/CHANGES.md` for what changed.
 
 * Python + FastAPI + SQLite, with a browser interface whose files are all bundled locally (no CDNs, no cloud, no telemetry, no paid services).
 * Runs on one designated Windows computer. Localhost only by default; office network access can be switched on by an administrator.
@@ -8,12 +10,11 @@ A local Windows application for Relay Human Cloud that keeps employee records an
 
 ## Download contents
 
-The delivery is split into three ZIP files because of an upload size limit:
+`RelayEmployeeHub_v2.0.0.zip` (built with `python scripts/build_release_zip.py`) holds the complete program folder: source, launcher scripts, bundled automations (video builder, question cards, fonts, post template, deep-filter.exe), docs, samples, licences and the offline wheelhouse for Python 3.12 and 3.13. Extract it anywhere local and keep the folder structure.
 
-* `RelayEmployeeHub_v1.0.0_app.zip`: the application (source, scripts, docs, samples, tests).
-* `RelayEmployeeHub_wheelhouse_py313.zip` and `RelayEmployeeHub_wheelhouse_py312.zip`: the pinned Windows components for offline installation.
+`RelayEmployeeHub_v1.0.0_app.zip` in this repository is the untouched original 1.0 delivery, kept as a backup.
 
-Extract the app ZIP, then extract the wheelhouse ZIP for your Python version **into the same folder**, so you get `RelayEmployeeHub\wheelhouse\py313\...` (or `py312`). Only one of the two wheelhouse ZIPs is needed.
+Not bundled (checked and reported in Settings > About): FFmpeg/FFprobe (`Tools\ffmpeg`), Tesseract OCR, classic Outlook, faster-whisper.
 
 ## Quick start on Windows
 
@@ -43,12 +44,13 @@ There are two ways to install. Both run fully offline once installed.
 ```
 <data folder>\
   employees.db        SQLite database (WAL mode)
-  images\             original photos, stored by permanent employee ID and photo version
+  images\             original photos by employee ID and version; images\clients\ holds client logos
   thumbnails\         generated previews
-  exports\            immutable package snapshots, ready-to-send folders, dry-run outbox
-  import_staging\     uploaded spreadsheets and photo batches awaiting review
+  exports\            package snapshots, ready-to-send folders, dry-run outbox, exports\posts\<project id>\ post pictures
+  import_staging\     uploaded spreadsheets, photo batches, screenshots and email attachments awaiting review
+  video\              Video Studio data: config.json, jobs.json (queue), batch\ (prepared clips), output\ (finished videos)
   backups\            default backup destination (never included inside backups)
-  logs\               application log
+  logs\               hub.log and video_studio.log
   tmp\                temporary work files
 ```
 
@@ -57,7 +59,8 @@ There are two ways to install. Both run fully offline once installed.
 ```
 pip install -r requirements-dev.txt
 python launcher/run_hub.py --data-dir ./devdata --outlook-mode dryrun
-python -m pytest tests            # 79 tests; the browser test needs `pip install playwright` + Chromium
+python -m pytest tests            # 97 tests; the two browser tests need `pip install playwright` + Chromium
+python scripts/video_smoke_test.py  # starts the Video Studio, confirms a tiny video, waits for Completed (needs ffmpeg)
 python scripts/make_samples.py    # regenerates the synthetic sample files
 ```
 
@@ -69,10 +72,15 @@ hub/                 application package
   context.py         data folder, startup checks, instance lock, transfer detection, defaults
   db.py              schema, migrations (with pre-migration backup), transactions
   permissions.py     roles, actions, location scope, field restrictions
-  services/          employees, imports, photos, pdfproc, packages, tasks, dispatch, outlook, scheduler, backups, users, sheets
+  services/          employees, imports, photos, pdfproc, packages, tasks, dispatch, outlook, scheduler, backups, users, sheets,
+                     clients, posts, postrender, postmail, screenshots (OCR), legacy_import, videosvc, depcheck
   routers/           HTTP endpoints (every one checks permissions on the server)
   static/            interface (HTML, CSS, JavaScript modules, icons, sample templates), no external assets
-launcher/run_hub.py  double-click entry point (starts server, opens browser, single instance)
+automations/
+  posts/             post template (internal_post_base.png) and the retired desktop Post Studio for reference
+  video/             interview_studio_web.py (Video Studio), build_interview.py (renderer), config.json, assets (cards, fonts), tools (deep-filter.exe)
+legacy/              the old dashboard and config files, kept for reference only
+launcher/run_hub.py  double-click entry point (starts server and Video Studio service, opens browser, single instance)
 scripts/             Windows setup/build/shortcut/logon/stop scripts, sample generator, licence collector
 packaging/           PyInstaller spec and icon
 wheelhouse/          pinned Windows wheels for Python 3.12 and 3.13 (offline installation)

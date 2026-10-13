@@ -1,0 +1,49 @@
+RELAY EMPLOYEE HUB 2.0  (employee database + Posts + Videos in one application)
+================================================================================
+
+FIRST-TIME SETUP (once per computer)
+1. Install Python 3.12 or 3.13 (64-bit) from python.org. Tick "Add python.exe to PATH".
+   This is the only download. Everything else is in the wheelhouse folder.
+2. Extract this ZIP somewhere local, for example C:\RelayEmployeeHub
+   (not inside OneDrive). Keep the folder structure as it is.
+3. Double-click  Setup Relay Employee Hub.bat
+   It creates a private Python environment, installs every component offline,
+   and offers to put a shortcut on the desktop.
+4. Optional but needed for videos: copy ffmpeg.exe and ffprobe.exe into
+   Tools\ffmpeg  (or install FFmpeg on PATH).
+5. Optional, needed for screenshot imports: install Tesseract OCR
+   (UB Mannheim installer). The hub finds it automatically in the usual
+   folders; otherwise enter the path under Settings > Posts and OCR.
+6. Optional, for automatic video captions: in a command prompt in this folder
+   run   .venv\Scripts\python.exe -m pip install faster-whisper
+   (needs internet; the speech model downloads on first use).
+
+DAILY USE
+- Double-click the desktop shortcut or  Start Relay Employee Hub.bat
+  The hub opens in your browser at http://127.0.0.1:8765/ and starts the
+  Video Studio service by itself (http://127.0.0.1:8756/). No terminal needed.
+  Starting it again when it already runs just opens the browser.
+- Employees: the master records. Saving a client assignment creates a post.
+- Import Data > Screenshots: paste or drop screenshots to update records.
+- Photos: upload headshots; "John Smith.jpg" matches John Michael Smith.
+- Posts: generated deployment posts, editing, publishing, logo requests.
+- Videos: queue status and the "Open Video Studio" button.
+- Stop: Settings > About > Stop application, or  Stop Relay Employee Hub.bat
+
+WHERE THINGS ARE
+- Program folder: this folder (read-only in daily use).
+- Data folder: %LOCALAPPDATA%\RelayEmployeeHub\Data  (database, photos, logos,
+  posts, video projects, outputs, logs, backups). Settings > About shows it.
+  Finished posts:  Data\exports\posts\<project id>\
+  Finished videos: Data\video\output\
+  Logs:            Data\logs\hub.log and video_studio.log
+- Settings > About > Dependencies shows exactly what is installed and missing.
+
+MOVING FROM THE OLD TOOLS
+- Settings > Posts and OCR > "Bring in data from the old Post Studio":
+  point it at the old files folder; logos, headshots and posts are imported,
+  uncertain matches are listed for you. The old folder is not changed.
+- Your original RelayEmployeeHub_v1.0.0_app.zip is kept untouched as a backup.
+
+Read docs\OPERATOR_GUIDE.md for the full guide and docs\CHANGES.md for what
+changed in this version.

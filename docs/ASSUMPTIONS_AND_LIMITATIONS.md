@@ -63,3 +63,23 @@
 * **Office LAN access**: Settings > Network (restart required).
 * **Read-only integrations**: `/api/fetch/v1/employees` with scoped tokens.
 * **Schema changes**: append a script to `MIGRATIONS` in `hub/db.py`; a database snapshot is taken automatically before migrating.
+
+## Version 2.0 additions (posts, screenshots, videos)
+
+### Assumptions
+
+* A "deployment" is identified by employee, client (normalised: case, punctuation and suffixes such as Pvt Ltd, Corp, Inc are ignored) and assignment start date. Two client spellings that are at least 80 percent similar, saved one after the other on the same employee, are treated as a correction, not a new deployment.
+* The old Post Studio's post layout and announcement wording are the defaults. The template file is the supplied `internal_post_base.png` (600 x 600).
+* The bundled Montserrat font of the old tool was not supplied; rendering uses Arial or Segoe UI on Windows (what the old tool used as its fallback), then the bundled Poppins and Plus Jakarta Sans, then DejaVu. Set `template_path` in Settings > Posts and OCR to use another template.
+* Logo and designation requests go to the employee's official email on record. If it is missing, the operator types the address.
+* Screenshot OCR uses Tesseract through its command line (no extra Python package). Accuracy depends on the picture; everything is shown for review and nothing unreadable is invented.
+* The Video Studio runs as a separate local process started by the hub (in-process in the packaged build) on port 8756, one render at a time.
+
+### Limitations
+
+* OCR, Outlook automation and video rendering need their Windows dependencies (Tesseract, classic Outlook with pywin32, FFmpeg). Each is checked and reported; none is bundled except deep-filter.exe, the video cards, the fonts and the post template.
+* Classic Outlook reply scanning, conversation IDs and attachment saving are implemented with the same COM calls as the old tool but could only be tested with the dry-run adapter in the development environment.
+* Copy image and Copy text use the browser clipboard (Chrome and Edge). Firefox may not support copying images; Export PNG always works.
+* The screenshot parser understands labelled lines, table rows with an email and the old `Client - Name` layout. Other layouts land in the review rows with the raw text shown.
+* Video captions still use proportional timing across the trimmed clip (unchanged renderer, as requested).
+* The DeepFilterNet binary only runs on Windows; elsewhere the FFmpeg filter is used and the dependency panel says which engine is active.

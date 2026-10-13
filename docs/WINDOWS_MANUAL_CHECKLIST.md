@@ -55,3 +55,15 @@ Prerequisites: classic Outlook for Windows (Microsoft 365 Apps or Office 2016/20
 
 * Recipient delivery is never confirmed by the app. "Confirmed in Sent Items" means Outlook sent it.
 * The app does not run as a Windows service. If nobody is signed in, nothing is sent.
+
+## D. Version 2.0: posts, screenshots, videos (Windows only checks)
+
+1. `Setup Relay Employee Hub.bat`, then `Start Relay Employee Hub.bat`: one browser tab opens; the Videos page shows the Video Studio as Running within a few seconds when `Tools\ffmpeg` holds ffmpeg.exe and ffprobe.exe. Starting the bat again only opens the browser.
+2. Settings > About > Dependencies: FFmpeg, FFprobe, Tesseract, pywin32 and Outlook show OK after installing them; the fix text is correct for what is missing.
+3. Import Data > Screenshots: paste a real HR screenshot with Ctrl+V. The text is read, the right employees are shown, ambiguous names ask for a choice, and applying changes only the visible fields. Undo from Import history restores them.
+4. Photos: upload `First Last.jpg` for an employee with a middle name; it is pre-selected. Upload the same file name when two employees share first and last name; it is not pre-selected.
+5. Posts > open a post missing a logo > Request by email > Send: the mail appears in Outlook Sent Items with the `[POSTREQ-...]` reference. Reply from the employee's mailbox with a logo and `Designation: ...`; Check replies now applies it and the preview renders.
+6. Reply with an attachment named `image001.png` and a real logo: the icon is rejected with a reason; the logo is used. Reply again from an older date: the newer designation stays.
+7. Copy image in Edge or Chrome, paste into Teams and Word. Copy text keeps the name bold in Outlook.
+8. Video Studio: Confirm & Make Video for two candidates in a row; the second shows Queued and starts after the first; the output and `_clean` file appear in `Data\video\output`. Close the hub during a render, start again: the job shows Interrupted with Retry.
+9. Packaged build (`scripts\build_windows_exe.bat`): the exe starts the Video Studio in-process and `Confirm & Make Video` still renders (the builder is started through `RelayEmployeeHub.exe --video-builder`).

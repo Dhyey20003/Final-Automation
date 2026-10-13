@@ -47,6 +47,10 @@ echo Installing components from the local wheelhouse (no internet needed)...
 )
 ".venv\Scripts\python.exe" -c "import fastapi, uvicorn, openpyxl, PIL, pypdfium2, tzdata; print('Components OK')" || (pause & exit /b 1)
 
+if not exist "Tools\ffmpeg" mkdir "Tools\ffmpeg"
+echo.
+echo For videos, copy ffmpeg.exe and ffprobe.exe into:  %CD%\Tools\ffmpeg
+echo For screenshot imports, install Tesseract OCR (Settings ^> About shows what is found).
 echo.
 choice /M "Create a desktop shortcut for Relay Employee Hub"
 if %errorlevel%==1 powershell -NoProfile -ExecutionPolicy Bypass -File "scripts\create_shortcut.ps1" -Mode source
