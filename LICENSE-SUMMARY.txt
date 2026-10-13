@@ -1,0 +1,2 @@
+pywin32 312
+License: PSF-2.0 (Python Software Foundation License). See https://github.com/mhammond/pywin32
