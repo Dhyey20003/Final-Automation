@@ -16,7 +16,7 @@ for %%V in (3.13 3.12) do (
 if not defined PYEXE (
   python -c "import sys; assert sys.version_info[:2] in ((3,12),(3,13))" >nul 2>&1 && (
     set "PYEXE=python"
-    for /f %%i in ('python -c "import sys;print(f'{sys.version_info[0]}.{sys.version_info[1]}')"') do set "PYVER=%%i"
+    for /f "usebackq" %%i in (`python -c "import sys;print(sys.version_info[1])"`) do set "PYVER=3.%%i"
   )
 )
 if not defined PYEXE (
