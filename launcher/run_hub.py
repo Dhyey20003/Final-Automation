@@ -65,13 +65,36 @@ def read_network(paths: Paths) -> dict:
         return {"lan_enabled": False, "port": 8765}
 
 
-def running_here(port: int) -> bool:
+def running_state(port: int) -> dict | None:
+    """The /api/auth/state of a copy already answering on this port, or None."""
     try:
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/auth/state", timeout=2) as r:
             data = json.loads(r.read().decode("utf-8"))
-            return data.get("app") == APP_NAME
+            return data if data.get("app") == APP_NAME else None
     except (urllib.error.URLError, OSError, ValueError):
-        return False
+        return None
+
+
+def running_here(port: int) -> bool:
+    return running_state(port) is not None
+
+
+def stop_other_version(paths: Paths, port: int, old_version: str) -> bool:
+    """An older copy is running on this data folder: ask it to stop and wait for the port."""
+    ctl = paths.data / "hub.control"
+    token = ctl.read_text(encoding="utf-8").strip() if ctl.exists() else ""
+    if token:
+        req = urllib.request.Request(f"http://127.0.0.1:{port}/api/control/stop", method="POST", headers={"X-Control-Token": token})
+        try:
+            urllib.request.urlopen(req, timeout=5).read()
+        except (urllib.error.URLError, OSError):
+            pass
+    for _ in range(60):
+        if not running_here(port):
+            time.sleep(1)
+            return True
+        time.sleep(0.5)
+    return False
 
 
 def port_free(host: str, port: int) -> bool:
@@ -168,10 +191,19 @@ def main(argv: list[str] | None = None) -> int:
         message(warn + "\n\nThe application will not start. Move the data folder or start with --data-dir.", error=True)
         return 2
 
-    if running_here(port):
-        if not (args.background or args.no_browser):
-            webbrowser.open(url)
-        return 0
+    other = running_state(port)
+    if other is not None:
+        if other.get("version") == APP_VERSION:
+            if not (args.background or args.no_browser):
+                webbrowser.open(url)
+            return 0
+        # A different (older) version is still running. Stop it so this version takes over.
+        if not stop_other_version(paths, port, other.get("version", "?")):
+            message(f"Relay Employee Hub version {other.get('version', '?')} is still running on port {port} and could not be stopped "
+                    f"automatically.\n\nClose it first: in that browser tab use Settings > About > Stop application, or run "
+                    f"Stop Relay Employee Hub.bat in its old folder (or end pythonw.exe in Task Manager). Then start this version again.",
+                    error=True)
+            return 6
     if not port_free(host, port):
         message(f"Port {port} is already used by another program. Close it, or change the port in Settings "
                 f"(or edit the network setting) and try again.", error=True)
