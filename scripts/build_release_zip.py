@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from hub import APP_VERSION  # noqa: E402
 
-INCLUDE_DIRS = ["hub", "launcher", "automations", "scripts", "packaging", "docs", "samples", "licenses", "tests", "legacy"]
+INCLUDE_DIRS = ["hub", "launcher", "automations", "scripts", "packaging", "docs", "samples", "licenses", "tests"]
 INCLUDE_FILES = ["README.md", "START_HERE.txt", "THIRD_PARTY_LICENSES.md", "requirements.txt", "requirements-dev.txt", "requirements-build.txt",
                  "pytest.ini", "Setup Relay Employee Hub.bat", "Start Relay Employee Hub.bat", "Stop Relay Employee Hub.bat", ".gitignore"]
 SKIP_PARTS = {"__pycache__", ".pytest_cache", "_artifacts", "devdata", "data", ".venv", ".buildenv", "build", "dist"}

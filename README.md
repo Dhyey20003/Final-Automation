@@ -12,8 +12,6 @@ Version 2.0 folds the former Automation Hub, Post Studio and Video Studio launch
 
 `RelayEmployeeHub_v2.0.0.zip` (built with `python scripts/build_release_zip.py`) holds the complete program folder: source, launcher scripts, bundled automations (video builder, question cards, fonts, post template, deep-filter.exe), docs, samples, licences and the offline wheelhouse for Python 3.12 and 3.13. Extract it anywhere local and keep the folder structure.
 
-`RelayEmployeeHub_v1.0.0_app.zip` in this repository is the untouched original 1.0 delivery, kept as a backup.
-
 Not bundled (checked and reported in Settings > About): FFmpeg/FFprobe (`Tools\ffmpeg`), Tesseract OCR, classic Outlook, faster-whisper.
 
 ## Quick start on Windows
@@ -77,9 +75,8 @@ hub/                 application package
   routers/           HTTP endpoints (every one checks permissions on the server)
   static/            interface (HTML, CSS, JavaScript modules, icons, sample templates), no external assets
 automations/
-  posts/             post template (internal_post_base.png) and the retired desktop Post Studio for reference
+  posts/             post template (internal_post_base.png)
   video/             interview_studio_web.py (Video Studio), build_interview.py (renderer), config.json, assets (cards, fonts), tools (deep-filter.exe)
-legacy/              the old dashboard and config files, kept for reference only
 launcher/run_hub.py  double-click entry point (starts server and Video Studio service, opens browser, single instance)
 scripts/             Windows setup/build/shortcut/logon/stop scripts, sample generator, licence collector
 packaging/           PyInstaller spec and icon

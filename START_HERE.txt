@@ -45,7 +45,6 @@ MOVING FROM THE OLD TOOLS
 - Settings > Posts and OCR > "Bring in data from the old Post Studio":
   point it at the old files folder; logos, headshots and posts are imported,
   uncertain matches are listed for you. The old folder is not changed.
-- Your original RelayEmployeeHub_v1.0.0_app.zip is kept untouched as a backup.
 
 Read docs\OPERATOR_GUIDE.md for the full guide and docs\CHANGES.md for what
 changed in this version.

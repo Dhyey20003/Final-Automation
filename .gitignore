@@ -8,3 +8,4 @@ devdata/
 tests/_artifacts/
 Tools/ffmpeg/*.exe
 *.log
+*.zip
