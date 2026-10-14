@@ -138,6 +138,9 @@ def create_app(data_dir: Path, outlook_mode: str | None = None, start_background
             "connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'")
         if path.startswith("/api/"):
             response.headers["Cache-Control"] = "no-store"
+        elif path.startswith("/static/"):
+            # Always revalidate interface files so a new version is never hidden by an old cached copy.
+            response.headers["Cache-Control"] = "no-cache"
         return response
 
     @app.exception_handler(HubError)
